@@ -34,11 +34,21 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: [
-          Icon(Icons.account_circle_outlined, size: 200,)
-        ],
+    return Scaffold (
+      appBar: AppBar(
+        title: Text('API DE SQL'),
+      ),
+      body: FutureBuilder(
+        future: ,
+        builder: (BuildContext context, AsyncSnapshot snapshot){
+          if(snapshot.connectionState == ConnectionState.waiting{
+            return Center(
+              child: CircleProgressIndicator(),
+            );
+          }
+          if(){}
+          );
+        }
       ),
     );
   }
