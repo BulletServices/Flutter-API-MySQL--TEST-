@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(MyApp());
@@ -29,27 +31,46 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   bool signin = true;
+
+  getMethod() async {
+    String URL = 'https://fluttersqlteste.000webhostapp.com/getData.php';
+    var res = await http.get(Uri.encodeFull(URL), headers:{"Accept":"application/json"});
+    var resBody = json.decode(res.body);
+    return resBody;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold (
+    return Scaffold(
       appBar: AppBar(
         title: Text('API DE SQL'),
       ),
       body: FutureBuilder(
-        future: ,
-        builder: (BuildContext context, AsyncSnapshot snapshot){
-          if(snapshot.connectionState == ConnectionState.waiting{
-            return Center(
-              child: CircleProgressIndicator(),
+          future: getMethod(),
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            List snap = snapshot.data;
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (snapshot.hasError) {
+              return Center(
+                child: Text("Erro ao Conectar"),
+              );
+            }
+            return ListView.builder(
+              itemCount: snap.length,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  title: Text("${snap[index]['heading']}"),
+                  subtitle: Text("${snap[index]['body']}"),
+                );
+              },
             );
-          }
-          if(){}
-          );
-        }
-      ),
+          }),
     );
   }
-  }
+}
